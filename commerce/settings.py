@@ -46,6 +46,9 @@ ALLOWED_HOSTS = [
     "commerce-h5zu.onrender.com",  # add your Render domain here
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://commerce-h5zu.onrender.com",
+]
 
 # Application definition
 
