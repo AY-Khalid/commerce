@@ -1,0 +1,66 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+#container-active{
+    background-color: rgb(237, 237, 237);
+    padding: 20px;
+    display: block;
+}
+
+.listing{
+    background-color: rgb(255, 255, 255);
+    padding: 20px;
+    margin: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.list-items{
+    background-color: #fffcfc;
+}
+
+.list-action{
+    background-color: #fffcfc;
+    padding: 40px;
+}
+
+.bid{
+border: 1px solid rgb(188, 188, 188);
+border-radius: 4px;
+margin-bottom: 10px;
+padding: 6px;
+width: 90%;
+background-color: rgb(242, 242, 242);
+}
+
+.fixed-img {
+    height: 200px;
+    object-fit: cover;
+}
+
+.listing-img{
+    width: 70%;
+}
+
+.watchlist-span{
+    display: flex;
+    background-color: red;
+}
+
+.watchlist_count{
+    height: 15px;
+    width: 15px;
+    font-size: 12px;
+    align-self: center;
+    align-items: center;
+    align-content: center;
+}
+
+.nav{
+    display: flex;
+    align-items: center;
+}

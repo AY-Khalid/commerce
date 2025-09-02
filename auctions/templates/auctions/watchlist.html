@@ -1,0 +1,102 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div id="container-active" class="container my-4">
+    <h2 class="mb-4 text-center"><strong>Listing:</strong> {{ listing.title }}</h2>
+
+    <div class="row">
+        <!-- Left column: Image + Description -->
+        <div class="col-12 col-md-6 mb-4">
+            <div class="list-items text-center text-md-left">
+                {% if listing.image %}
+                <img src="{{ listing.image.url }}" class="img-fluid rounded mb-3" alt="{{ listing.title }}">
+                {% elif listing.image_url %}
+                <img src="{{ listing.image_url }}" class="img-fluid rounded mb-3" alt="{{ listing.title }}">
+                {% else %}
+                <p><em>No image available</em></p>
+                {% endif %}
+
+                <p>{{ listing.description }}</p>
+                <h4>Starting Bid: ${{ listing.start_bid }}</h4>
+                <p><strong>Category:</strong> {{ listing.category }}</p>
+            </div>
+        </div>
+
+        <!-- Right column: Actions + Bids -->
+        <div class="col-12 col-md-6 mb-4">
+            <div class="list-action">
+                <h3>Details</h3>
+                <ul class="list-unstyled">
+                    <li><strong>Listed by:</strong> {{ listing.owner.username }}</li>
+                    <li><strong>Created Date:</strong> {{ listing.created_at|date:"M d, Y H:i" }}</li>
+                </ul>
+                <hr>
+                <p>{{ count_current_bid }} bid(s) so far. {{ bid_status }}</p>
+                <p><strong>Current Price:</strong> ${{ current_price }}</p>
+
+                <!-- Place Bid -->
+                <form action="{% url 'watchlist' listing.id %}" method="post" class="mb-2">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input type="number" step="0.01" name="bid_amount" class="form-control"
+                            placeholder="Enter your bid">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary">Place Bid</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Remove listing (owner only) -->
+                {% if user == listing.owner and listing.status == "active" %}
+                <form action="{% url 'watchlist' listing.id %}" method="post" class="mb-2">
+                    {% csrf_token %}
+                    <button name="remove_listing" value="1" class="btn btn-danger btn-block">Remove Listing</button>
+                </form>
+                {% endif %}
+
+                <!-- Toggle watchlist -->
+                <form action="{% url 'toggle_watchlist' listing.id %}" method="post" class="mb-2">
+                    {% csrf_token %}
+                    {% if user in listing.watchers.all %}
+                    <button class="btn btn-warning btn-block">Remove from Watchlist</button>
+                    {% else %}
+                    <button class="btn btn-success btn-block">Add to Watchlist</button>
+                    {% endif %}
+                </form>
+
+                <!-- Messages -->
+                {% if messages %}
+                <div class="mt-2">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} mb-1">{{ message }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Comments Section -->
+    <h3 class="mt-4">Comments</h3>
+
+    <form action="{% url 'watchlist' listing.id %}" method="post" class="mb-3">
+        {% csrf_token %}
+        <textarea name="comment" rows="3" class="form-control" placeholder="Write your comment..."></textarea>
+        <button type="submit" class="btn btn-secondary mt-2">Post Comment</button>
+    </form>
+
+    <div class="comments mt-4">
+        {% for comment in comments %}
+        <div class="border p-2 mb-3 rounded">
+            <strong>{{ comment.user.username }}</strong>
+            <small class="text-muted">{{ comment.created_at|date:"M d, Y H:i" }}</small>
+            <p class="mb-0">{{ comment.content }}</p>
+        </div>
+        {% empty %}
+        <p>No comments yet. Be the first to comment!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
