@@ -100,7 +100,7 @@ def create_listing(request):
 #     })
 
 
-@login_required
+@login_required(login_url="login")
 def watchlist(request, id):
     listing = get_object_or_404(Listing, pk=id)
 
